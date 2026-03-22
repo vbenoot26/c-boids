@@ -61,6 +61,27 @@ Vector2 calculateSeparation(const struct Boid *boid,
   return (Vector2){dx, dy};
 }
 
+Vector2 calculateAlignment(const struct Boid *boid,
+                           const struct Boid neighbours[],
+                           int neighbourAmount) {
+  if (neighbourAmount == 0) {
+    return (Vector2){0, 0};
+  }
+
+  float cumX = 0;
+  float cumY = 0;
+
+  for (int i = 0; i < neighbourAmount; i++) {
+    cumX += neighbours[i].speed.x;
+    cumY += neighbours[i].speed.y;
+  }
+
+  return (Vector2){
+      cumX / neighbourAmount,
+      cumY / neighbourAmount,
+  };
+}
+
 float clampSpeedComponent(float speed, float max) {
   if (speed > max) {
     return max;
@@ -86,14 +107,21 @@ float updateLocationcomponent(int max, float location, float speed) {
 void update(const struct Context *ctx, struct Boid *boid,
             const struct Boid *neighbours, const int neighbourAmount,
             const struct Boid *separators, const int separatorAmount) {
-  Vector2 separation = calculateSeparation(boid, separators, separatorAmount);
+  // Vector2 separation = calculateSeparation(boid, separators,
+  // separatorAmount);
 
-  boid->speed.x += ctx->avoidFactor * separation.x;
-  boid->speed.y += ctx->avoidFactor * separation.y;
+  // boid->speed.x += ctx->avoidFactor * separation.x;
+  // boid->speed.y += ctx->avoidFactor * separation.y;
+
+  Vector2 alignment = calculateAlignment(boid, neighbours, neighbourAmount);
+  boid->speed.x += alignment.x * ctx->matchingFactor;
+  boid->speed.y += alignment.y * ctx->matchingFactor;
 
   boid->speed.x = clampSpeedComponent(boid->speed.x, ctx->maxspeed);
   boid->speed.y = clampSpeedComponent(boid->speed.y, ctx->maxspeed);
 
-  boid->location.x = updateLocationcomponent(ctx->screenWidth, boid->location.x, boid->speed.x);
-  boid->location.y = updateLocationcomponent(ctx->screenWidth, boid->location.y, boid->speed.y);
+  boid->location.x = updateLocationcomponent(ctx->screenWidth, boid->location.x,
+                                             boid->speed.x);
+  boid->location.y = updateLocationcomponent(ctx->screenWidth, boid->location.y,
+                                             boid->speed.y);
 }

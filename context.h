@@ -12,7 +12,6 @@ struct Context {
   float matchingFactor;
 
   int maxspeed;
-  int minspeed;
 
   // Raylib specific
   int fps;

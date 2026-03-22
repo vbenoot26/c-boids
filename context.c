@@ -11,8 +11,7 @@ struct Context buildContext() {
     .avoidFactor = 0.05,
     .matchingFactor = 0.05,
 
-    .maxspeed = 20,
-    .minspeed = 3,
+    .maxspeed = 10,
     
     .fps = 60,
     .screenWidth = 800,
