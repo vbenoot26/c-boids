@@ -6,7 +6,7 @@
 #include <time.h>
 
 void draw(struct Boid boid, Color color) {
-  DrawCircle(boid.location.x, boid.location.y, 5, color);
+  DrawPixel(boid.location.x, boid.location.y, color);
 }
 
 void init(const struct Context *ctx) {
@@ -44,10 +44,6 @@ int main() {
       update(&ctx, boids + i, neighbours, neighbourAmount, separators,
              separatorAmount);
 
-    }
-
-    for (int i = 0; i < boidsAmount; i++) {
-      DrawCircle(boids[i].location.x, boids[i].location.y, ctx.visionDistance, GRAY);
     }
 
     for (int i = 0; i < boidsAmount; i++) {

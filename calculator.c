@@ -122,8 +122,7 @@ float updateLocationcomponent(int max, float location, float speed) {
 void update(const struct Context *ctx, struct Boid *boid,
             const struct Boid *neighbours, const int neighbourAmount,
             const struct Boid *separators, const int separatorAmount) {
-  Vector2 separation = calculateSeparation(boid, separators,
-  separatorAmount);
+  Vector2 separation = calculateSeparation(boid, separators, separatorAmount);
   Vector2 alignment = calculateAlignment(neighbours, neighbourAmount);
   Vector2 cohesion = calculateCohesion(neighbours, neighbourAmount);
 
