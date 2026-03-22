@@ -7,9 +7,9 @@ struct Context buildContext() {
     .visionDistance = 200,
     .separationDistance = 100,
 
-    .turnFactor = 0.2,
     .avoidFactor = 0.05,
     .matchingFactor = 0.05,
+    .centeringFactor = 0.05,
 
     .maxspeed = 10,
     

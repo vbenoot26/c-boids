@@ -7,9 +7,9 @@ struct Context {
   int visionDistance;
   int separationDistance;
 
-  float turnFactor;
   float avoidFactor;
   float matchingFactor;
+  float centeringFactor;
 
   int maxspeed;
 
