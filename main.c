@@ -33,30 +33,19 @@ int main() {
     boids[i] = newBoid(ctx.screenWidth, ctx.screenHeight);
   }
 
-  const struct Boid testBoid = {
-      {(float)ctx.screenWidth / 2.0, (float)ctx.screenHeight / 2}, {0.0, 0.0}};
-
   while (!WindowShouldClose()) {
     BeginDrawing();
 
     ClearBackground(BLACK);
 
-    DrawCircle(testBoid.location.x, testBoid.location.y, ctx.visionDistance, GRAY);
-
     for (int i = 0; i < boidsAmount; i++) {
+      getNeighbours(&ctx, boids[i], boids, ctx.boidAmount, neighbours,
+                    &neighbourAmount, separators, &separatorAmount);
+
       update(&ctx, boids + i, neighbours, neighbourAmount, separators,
              separatorAmount);
-    }
 
-    getNeighbours(&ctx, testBoid, boids, ctx.boidAmount, neighbours,
-                  &neighbourAmount, separators, &separatorAmount);
-
-    for (int i = 0; i < neighbourAmount; i++) {
-      draw(neighbours[i], RED);
-    }
-
-    for (int i = 0; i < separatorAmount; i++) {
-      draw(separators[i], MAGENTA);
+      draw(boids[i], WHITE);
     }
 
     EndDrawing();
