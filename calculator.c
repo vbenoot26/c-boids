@@ -1,4 +1,5 @@
 #include "boid.h"
+#include "context.h"
 #include "math.h"
 #include <raylib.h>
 
@@ -25,4 +26,11 @@ int getNeighbours(const struct Boid boid,
   }
 
   return neighbourAmount;
+}
+
+void update(struct Context ctx, struct Boid *boid, struct Boid *neighbours, int neighbourAmount) {
+      boid->location.x += boid->speed.x;
+      boid->location.x = (int)boid->location.x % ctx.screenWidth;
+      boid->location.y += boid->speed.y;
+      boid->location.y = (int)boid->location.y % ctx.screenHeight;
 }
