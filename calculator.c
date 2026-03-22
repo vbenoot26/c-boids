@@ -2,7 +2,6 @@
 #include "context.h"
 #include "math.h"
 #include <raylib.h>
-#include <stdio.h>
 
 float getDistance(const struct Boid boid1, const struct Boid boid2) {
   Vector2 loc1 = boid1.location;
@@ -59,7 +58,29 @@ Vector2 calculateSeparation(const struct Boid *boid,
     dy += location1.y - location2.y;
   }
 
-  return (Vector2) { dx, dy };
+  return (Vector2){dx, dy};
+}
+
+float clampSpeedComponent(float speed, float max) {
+  if (speed > max) {
+    return max;
+  } else if (speed < -max) {
+    return -max;
+  }
+
+  return speed;
+}
+
+float updateLocationcomponent(int max, float location, float speed) {
+  float result = location + speed;
+
+  if (result > max) {
+    return 0;
+  } else if (location < 0) {
+    return max;
+  }
+
+  return result;
 }
 
 void update(const struct Context *ctx, struct Boid *boid,
@@ -69,10 +90,10 @@ void update(const struct Context *ctx, struct Boid *boid,
 
   boid->speed.x += ctx->avoidFactor * separation.x;
   boid->speed.y += ctx->avoidFactor * separation.y;
-  
-  boid->location.x += boid->speed.x;
-  boid->location.x = (int)boid->location.x % ctx->screenWidth;
-  boid->location.y += boid->speed.y;
-  boid->location.y = (int)boid->location.y % ctx->screenHeight;
-}
 
+  boid->speed.x = clampSpeedComponent(boid->speed.x, ctx->maxspeed);
+  boid->speed.y = clampSpeedComponent(boid->speed.y, ctx->maxspeed);
+
+  boid->location.x = updateLocationcomponent(ctx->screenWidth, boid->location.x, boid->speed.x);
+  boid->location.y = updateLocationcomponent(ctx->screenWidth, boid->location.y, boid->speed.y);
+}
