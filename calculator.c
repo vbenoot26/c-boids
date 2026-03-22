@@ -2,6 +2,7 @@
 #include "context.h"
 #include "math.h"
 #include <raylib.h>
+#include <stdio.h>
 
 float getDistance(const struct Boid boid1, const struct Boid boid2) {
   Vector2 loc1 = boid1.location;
@@ -11,44 +12,44 @@ float getDistance(const struct Boid boid1, const struct Boid boid2) {
               (loc1.y - loc2.y) * (loc1.y - loc2.y));
 }
 
-void getNeighbours(const struct Context ctx, const struct Boid boid,
+void getNeighbours(const struct Context *ctx, const struct Boid boid,
                    struct Boid *allboids, int boidsAmount,
                    struct Boid *neighbourlist, int *neighbourAmount,
-                   int maxNeighbours, struct Boid *separatorlist,
-                   int *separatorAmount) {
-  *neighbourAmount = 0;
-  *separatorAmount = 0;
+                   struct Boid *separatorlist, int *separatorAmount) {
+  int foundNeighbours = 0;
+  int foundSeparators = 0;
 
   for (int i = 0; i < boidsAmount; i++) {
     float dist = getDistance(boid, allboids[i]);
-    if (dist < ctx.visionDistance) {
-      neighbourlist[*neighbourAmount] = allboids[i];
+    if (dist < ctx->visionDistance) {
+      neighbourlist[foundNeighbours] = allboids[i];
+      foundNeighbours++;
 
-      neighbourAmount++;
-
-      if (*neighbourAmount > maxNeighbours) {
+      if (foundNeighbours > ctx->boidAmount) {
+        *neighbourAmount = -1;
         return;
       }
     }
 
-    if (dist < ctx.separationDistance) {
-      separatorlist[*separatorAmount] = allboids[i];
-
-      separatorAmount++;
-
-      if (*separatorAmount > maxNeighbours) {
+    if (dist < ctx->separationDistance) {
+      separatorlist[foundSeparators] = allboids[i];
+      foundSeparators++;
+      if (foundSeparators > ctx->boidAmount) {
+        *separatorAmount = -1;
         return;
       }
     }
   }
+
+  *neighbourAmount = foundNeighbours;
+  *separatorAmount = foundSeparators;
 }
 
-void update(struct Context ctx, struct Boid *boid,
+void update(const struct Context *ctx, struct Boid *boid,
             struct Boid *neighbours, int neighbourAmount,
-            struct Boid *separators, int separatorAmount
-          ) {
+            struct Boid *separators, int separatorAmount) {
   boid->location.x += boid->speed.x;
-  boid->location.x = (int)boid->location.x % ctx.screenWidth;
+  boid->location.x = (int)boid->location.x % ctx->screenWidth;
   boid->location.y += boid->speed.y;
-  boid->location.y = (int)boid->location.y % ctx.screenHeight;
+  boid->location.y = (int)boid->location.y % ctx->screenHeight;
 }

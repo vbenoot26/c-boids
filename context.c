@@ -4,8 +4,8 @@ struct Context buildContext() {
   return (struct Context) {
     .boidAmount = 50,
 
-    .visionDistance = 50,
-    .separationDistance = 25,
+    .visionDistance = 200,
+    .separationDistance = 100,
 
     .turnFactor = 0.2,
     .avoidFactor = 0.05,
