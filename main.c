@@ -1,11 +1,17 @@
 #include "boid.h"
+#include "calculator.h"
 #include "raylib.h"
-#include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 
-void draw(struct Boid boid) {
-  DrawCircle(boid.location.x, boid.location.y, 5, WHITE);
+const int screenWidth = 800;
+const int screenHeight = 600;
+
+const struct Boid testBoid = {
+    {((float)screenWidth) / 2.0, ((float)screenHeight) / 2.0}, {0, 0}};
+
+void draw(struct Boid boid, Color color) {
+  DrawCircle(boid.location.x, boid.location.y, 5, color);
 }
 
 void init() { srandom(time(NULL)); }
@@ -13,15 +19,13 @@ void init() { srandom(time(NULL)); }
 int main() {
   init();
 
-  const int screenWidth = 800;
-  const int screenHeight = 600;
-
   const int boidsAmount = 50;
 
   InitWindow(screenWidth, screenHeight, "CIRCLE");
   SetTargetFPS(60);
 
   struct Boid boids[boidsAmount];
+  struct Boid neighbours[boidsAmount];
 
   for (int i = 0; i < boidsAmount; i++) {
     boids[i] = newBoid(screenWidth, screenHeight);
@@ -30,6 +34,8 @@ int main() {
   while (!WindowShouldClose()) {
     BeginDrawing();
 
+    draw(testBoid, RED);
+
     ClearBackground(BLACK);
     for (int i = 0; i < boidsAmount; i++) {
       boids[i].location.x += boids[i].speed.x;
@@ -37,8 +43,16 @@ int main() {
       boids[i].location.y += boids[i].speed.y;
       boids[i].location.y = (int)boids[i].location.y % screenHeight;
 
-      draw(boids[i]);
+      draw(boids[i], WHITE);
     }
+
+    int amNeighbours =
+        getNeighbours(testBoid, boids, boidsAmount, neighbours, boidsAmount);
+
+    for (int i = 0; i < amNeighbours; i++) {
+      draw(neighbours[i], MAGENTA);
+    }
+
     EndDrawing();
   }
   CloseWindow();
