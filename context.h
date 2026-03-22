@@ -7,6 +7,13 @@ struct Context {
   int visionDistance;
   int separationDistance;
 
+  float turnFactor;
+  float avoidFactor;
+  float matchingFactor;
+
+  int maxspeed;
+  int minspeed;
+
   // Raylib specific
   int fps;
 
