@@ -122,17 +122,17 @@ float updateLocationcomponent(int max, float location, float speed) {
 void update(const struct Context *ctx, struct Boid *boid,
             const struct Boid *neighbours, const int neighbourAmount,
             const struct Boid *separators, const int separatorAmount) {
-  // Vector2 separation = calculateSeparation(boid, separators,
-  // separatorAmount);
-
-  // boid->speed.x += ctx->avoidFactor * separation.x;
-  // boid->speed.y += ctx->avoidFactor * separation.y;
-
-  // Vector2 alignment = calculateAlignment(boid, neighbours, neighbourAmount);
-  // boid->speed.x += alignment.x * ctx->matchingFactor;
-  // boid->speed.y += alignment.y * ctx->matchingFactor;
-
+  Vector2 separation = calculateSeparation(boid, separators,
+  separatorAmount);
+  Vector2 alignment = calculateAlignment(neighbours, neighbourAmount);
   Vector2 cohesion = calculateCohesion(neighbours, neighbourAmount);
+
+  boid->speed.x += alignment.x * ctx->matchingFactor;
+  boid->speed.y += alignment.y * ctx->matchingFactor;
+
+  boid->speed.x += ctx->avoidFactor * separation.x;
+  boid->speed.y += ctx->avoidFactor * separation.y;
+
   boid->speed.x += (cohesion.x - boid->location.x) * ctx->centeringFactor;
   boid->speed.y += (cohesion.y - boid->location.y) * ctx->centeringFactor;
 

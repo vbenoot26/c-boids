@@ -2,7 +2,6 @@
 #include "calculator.h"
 #include "context.h"
 #include "raylib.h"
-#include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 
@@ -45,9 +44,15 @@ int main() {
       update(&ctx, boids + i, neighbours, neighbourAmount, separators,
              separatorAmount);
 
-      draw(boids[i], WHITE);
     }
 
+    for (int i = 0; i < boidsAmount; i++) {
+      DrawCircle(boids[i].location.x, boids[i].location.y, ctx.visionDistance, GRAY);
+    }
+
+    for (int i = 0; i < boidsAmount; i++) {
+      draw(boids[i], WHITE);
+    }
     EndDrawing();
   }
   CloseWindow();
