@@ -1,6 +1,7 @@
 #include "boid.h"
 #include "calculator.h"
 #include "context.h"
+#include "grid.h"
 #include "raylib.h"
 #include <stdlib.h>
 #include <time.h>
@@ -31,6 +32,8 @@ int main() {
   for (int i = 0; i < boidsAmount; i++) {
     boids[i] = newBoid(ctx.screenWidth, ctx.screenHeight);
   }
+
+  struct Grid *grid = newGrid(ctx);
 
   while (!WindowShouldClose()) {
     BeginDrawing();
